@@ -1,0 +1,7 @@
+commands:
+
+spark-submit task1.py ../resource/asnlib/publicdata/review.json output.json ../resource/asnlib/publicdata/stopwords 2018 10 10
+spark-submit task2.py ../resource/asnlib/publicdata/review_test.json ../resource/asnlib/publicdata/business.json output_test_spark.json spark 1000
+spark-submit task2.py ../resource/asnlib/publicdata/review_test.json ../resource/asnlib/publicdata/business.json output_test_spark.json no_spark 1000
+spark-submit task3.py ../resource/asnlib/publicdata/review.json output3custom.json default 30 1000
+spark-submit task3.py ../resource/asnlib/publicdata/review.json output3custom.json customized 30 1000

@@ -15,11 +15,18 @@ class Task1:
         self.year = sys.argv[4]
         self.top_m = int(sys.argv[5])
         self.top_n = int(sys.argv[6])
+        print("====== LOGS =====")
+        print("Input file: {}".format(self.input_file))
+        print("Output file: {}".format(self.output_file))
+        print("Stopwords file: {}".format(self.stopwords_file))
+        print("Year: {}".format(self.year))
+        print("top_m: {}".format(self.top_m))
+        print("top_n: {}".format(self.top_n))
         self.output = {}
 
     @staticmethod
     def wrangled(review):
-        punctuations = set(["(", "[", ",", ".", "!", "?", ":", ";", "]", ")"])
+        punctuations = set(['(', '[', ',', '.', '!', '?', ':', ';', ']', ')'])
         ret = []
         for c in review:
             if (c.isalpha() or c == " ") and c not in punctuations:
@@ -27,7 +34,6 @@ class Task1:
         return "".join(ret)
 
     def read_data(self):
-        # stopwords = self.sc.textFile(self.stopwords_file)
         with open(self.stopwords_file) as f:
             self.stopwords = set(map(lambda x: x.strip(), f.readlines()))
 
@@ -63,6 +69,7 @@ class Task1:
                             .take(top_n)
 
     def write_output(self):
+        print(self.output)
         with open(self.output_file, "w") as f:
             json.dump(self.output, f)
 

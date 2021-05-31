@@ -20,12 +20,17 @@ class Task3:
     def read_data(self):
         self.review_data = self.sc.textFile(self.review_file)
 
+    @staticmethod
     def custom_hash(x):
         return x
 
     def get_data(self):
         top_n = self.top_n
         rdd = self.review_data.map(lambda row: (json.loads(row)['business_id'], 1))
+
+        if self.partition_type == "customized":
+            rdd = rdd.partitionBy(self.n_partitions, Task3.custom_hash)
+
         self.output["n_partitions"] = rdd.getNumPartitions()
         self.output["n_items"] = rdd.mapPartitions(lambda x: iter(x), True).collect()
         self.output["result"] = rdd.reduceByKey(lambda x, y: x + y)\
