@@ -75,7 +75,7 @@ class Task2:
         
         avg_data.sort(key=lambda x: (-x[1], x[0]))
 
-        self.output["result"] = avg_data[:self.top_n]
+        self.output["result"] = list(map(lambda x: (x[0], round(x[1], 1)), avg_data[:self.top_n]))
 
     
     def spark_get_top(self, top_n):
@@ -93,7 +93,8 @@ class Task2:
                                     .aggregateByKey(zero_value, seq_fn, comb_fn)\
                                         .mapValues(lambda x: x[0]/x[1])\
                                             .sortBy(lambda x: (-x[1], x[0]))\
-                                                .take(top_n)
+                                                .map(lambda x: (x[0], round(x[1], 1)))\
+                                                    .take(top_n)
     
     def write_output(self):
         with open(self.output_file, "w") as f:

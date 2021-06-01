@@ -26,11 +26,15 @@ class Task1:
 
     @staticmethod
     def wrangled(review):
-        punctuations = set(['(', '[', ',', '.', '!', '?', ':', ';', ']', ')'])
+        punctuations = set(["(", "[", ",", ".", "!", "?", ":", ";", "]", ")"])
         ret = []
         for c in review:
-            if (c.isalpha() or c == " ") and c not in punctuations:
+            if c in punctuations:
+                ret.append(" ")
+            elif (c.isalpha() or c == " "):
                 ret.append(c)
+            else:
+                ret.append(" ")
         return "".join(ret)
 
     def read_data(self):
@@ -65,8 +69,9 @@ class Task1:
             .filter(lambda word: word not in stopwords)\
                 .map(lambda word: (word, 1))\
                     .reduceByKey(lambda x, y: x + y)\
-                        .sortBy(lambda x: -x[1])\
+                        .sortBy(lambda x: (-x[1], x[0]))\
                             .take(top_n)
+        self.output["E"] = [x[0] for x in self.output["E"]]
 
     def write_output(self):
         print(self.output)

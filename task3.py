@@ -2,6 +2,7 @@ from pyspark import SparkContext
 import json
 import sys
 import time
+import random
 
 
 class Task3:
@@ -22,7 +23,7 @@ class Task3:
 
     @staticmethod
     def custom_hash(x):
-        return x
+        return int(ord(x[len(x) // 2]) * 22 / 7)
 
     def get_data(self):
         top_n = self.top_n
@@ -32,9 +33,9 @@ class Task3:
             rdd = rdd.partitionBy(self.n_partitions, Task3.custom_hash)
 
         self.output["n_partitions"] = rdd.getNumPartitions()
-        self.output["n_items"] = rdd.mapPartitions(lambda x: iter(x), True).collect()
+        self.output["n_items"] = rdd.glom().map(lambda x: len(x)).collect()
         self.output["result"] = rdd.reduceByKey(lambda x, y: x + y)\
-                                    .filter(lambda x: x > top_n).collect()
+                                    .filter(lambda x: x[1] > top_n).collect()
     
     def write_output(self):
         with open(self.output_file, "w") as f:
